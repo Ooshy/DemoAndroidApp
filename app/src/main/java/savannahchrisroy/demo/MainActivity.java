@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends android.support.v7.app.AppCompatActivity {
 
     ListView DemoSelectionListView;
     @Override
@@ -29,8 +29,8 @@ public class MainActivity extends ActionBarActivity {
     private void setupDemoListView() {
         
         final ArrayList<String> demoTitles = new ArrayList<>();
-        demoTitles.add("Hello");
-        demoTitles.add("World");
+        demoTitles.add("Chris");
+        demoTitles.add("Roy");
         final StableArrayAdapter adapter = new StableArrayAdapter(this,
                 android.R.layout.simple_list_item_1, demoTitles);
 
@@ -42,16 +42,16 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
-//                final String item = (String) parent.getItemAtPosition(position);
-//                view.animate().setDuration(2000).alpha(0)
-//                        .withEndAction(new Runnable() {
-//                            @Override
-//                            public void run() {
-////                                demoTitles.remove(item);
-////                                adapter.notifyDataSetChanged();
-//                                view.setAlpha(1);
-//                            }
-//                        });
+                final String item = (String) parent.getItemAtPosition(position);
+                view.animate().setDuration(500).alpha(0)
+                        .withEndAction(new Runnable() {
+                            @Override
+                            public void run() {
+//                                demoTitles.remove(item);
+//                                adapter.notifyDataSetChanged();
+                                view.setAlpha(1);
+                            }
+                        });
             }
 
         });
@@ -59,11 +59,12 @@ public class MainActivity extends ActionBarActivity {
     }
     private class StableArrayAdapter extends ArrayAdapter<String> {
 
-        HashMap<String, Integer> mIdMap = new HashMap<>();
+        HashMap<String, Integer> mIdMap;
 
         public StableArrayAdapter(Context context, int textViewResourceId,
                                   List<String> objects) {
             super(context, textViewResourceId, objects);
+            mIdMap = new HashMap<>();
             for (int i = 0; i < objects.size(); ++i) {
                 mIdMap.put(objects.get(i), i);
             }
