@@ -3,4 +3,12 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_animation">AnimationActivity</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_web">WebActivity</string>
+    <string name="title_activity_music">MusicActivity</string>
+    <string name="title_activity_information_passing">InformationPassingActivity</string>
+    <string name="title_activity_result">ResultActivity</string>
+    <string name="click_to_enter_information">Enter Information</string>
+    <string name="result_information">Enter Information</string>
 </resources>

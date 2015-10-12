@@ -1,19 +1,24 @@
-package savannahchrisroy.demo;
+package savannahchrisroy.demo.activities;
 
 import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import savannahchrisroy.demo.R;
+import savannahchrisroy.demo.pojo.Topic;
 
 public class MainActivity extends android.support.v7.app.AppCompatActivity {
 
@@ -27,12 +32,15 @@ public class MainActivity extends android.support.v7.app.AppCompatActivity {
     }
 
     private void setupDemoListView() {
-        
-        final ArrayList<String> demoTitles = new ArrayList<>();
-        demoTitles.add("Chris");
-        demoTitles.add("Roy");
+        final ArrayList<Topic> topics = new ArrayList<>();
+        topics.add(new Topic("Animations", AnimationActivity.class));
+        topics.add(new Topic("Camera", CameraActivity.class));
+        topics.add(new Topic("Information Passing", InformationPassingActivity.class));
+        topics.add(new Topic("Music", MusicActivity.class));
+        topics.add(new Topic("Web", WebActivity.class));
+
         final StableArrayAdapter adapter = new StableArrayAdapter(this,
-                android.R.layout.simple_list_item_1, demoTitles);
+                android.R.layout.simple_list_item_1, topics);
 
         final ListView demoSelectionListView = (ListView) findViewById(R.id.listView);
         demoSelectionListView.setAdapter(adapter);
@@ -42,38 +50,53 @@ public class MainActivity extends android.support.v7.app.AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view,
                                     int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                view.animate().setDuration(500).alpha(0)
-                        .withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-//                                demoTitles.remove(item);
-//                                adapter.notifyDataSetChanged();
-                                view.setAlpha(1);
-                            }
-                        });
+                final Topic topic = (Topic) parent.getItemAtPosition(position);
+                final Intent intent = new Intent(getApplicationContext(), topic.getActivity());
+                startActivity(intent);
             }
-
         });
 
     }
-    private class StableArrayAdapter extends ArrayAdapter<String> {
+    private static class ViewHolder {
+        private TextView itemView;
+    }
+    private class StableArrayAdapter extends ArrayAdapter<Topic> {
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(this.getContext())
+                        .inflate(android.R.layout.simple_list_item_1, parent, false);
 
-        HashMap<String, Integer> mIdMap;
+                viewHolder = new ViewHolder();
+                viewHolder.itemView = (TextView) convertView.findViewById(android.R.id.text1);
 
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            Topic item = getItem(position);
+            if (item!= null) {
+                viewHolder.itemView.setText(String.format("%s", item.getName()));
+            }
+
+            return convertView;
+        }
+
+        HashMap<Topic, Integer> mIdMap;
         public StableArrayAdapter(Context context, int textViewResourceId,
-                                  List<String> objects) {
-            super(context, textViewResourceId, objects);
+                                  List<Topic> topics) {
+            super(context, textViewResourceId, topics);
             mIdMap = new HashMap<>();
-            for (int i = 0; i < objects.size(); ++i) {
-                mIdMap.put(objects.get(i), i);
+            for (int i = 0; i < topics.size(); ++i) {
+                mIdMap.put(topics.get(i), i);
             }
         }
 
         @Override
         public long getItemId(int position) {
-            String item = getItem(position);
-            return mIdMap.get(item);
+            Topic topic = getItem(position);
+            return mIdMap.get(topic);
         }
 
         @Override
